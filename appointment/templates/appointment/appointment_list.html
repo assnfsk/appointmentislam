@@ -1,0 +1,251 @@
+<!-- templates/appointment/appointment_list.html -->
+
+{% block extra_css %}
+<style>
+    :root {
+        --apple-gray: #f5f5f7;
+        --apple-blue: #424874;
+        --apple-dark: #1d1d1f;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+        background-color: var(--apple-gray);
+        color: var(--apple-dark);
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+
+    .appointments-container {
+        background: white;
+        border-radius: 18px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: var(--apple-dark);
+    }
+
+    .filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+        background: var(--apple-gray);
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d2d2d7;
+        border-radius: 12px;
+        background-color: white;
+        font-size: 1rem;
+        transition: all 0.2s;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    select {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.41.59L6 5.17 10.59.59 12 2 6 8 0 2z' fill='%23666'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+
+    .btn-filter {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--apple-blue);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin: 0rem 2rem;
+    }
+
+    .btn-filter:hover {
+        background-color: #0077ED;
+        transform: scale(1.01);
+    }
+
+    .appointments-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 1rem;
+    }
+
+    .appointments-table th {
+        text-align: left;
+        padding: 1rem;
+        background-color: var(--apple-gray);
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .appointments-table th:first-child {
+        border-top-left-radius: 12px;
+    }
+
+    .appointments-table th:last-child {
+        border-top-right-radius: 12px;
+    }
+
+    .appointments-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #d2d2d7;
+    }
+
+    .appointments-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .appointments-table tr:hover {
+        background-color: #f8f8f8;
+    }
+
+    .date-group {
+        background-color: var(--apple-gray);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .date-group td {
+        padding: 0.75rem 1rem;
+        border-bottom: none;
+    }
+
+    .time-cell {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        color: var(--apple-blue);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 1rem;
+            padding: 1rem;
+        }
+
+        .appointments-container {
+            padding: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+        }
+
+        .appointments-table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filters {
+            grid-template-columns: 1fr;
+        }
+        .btn-filter {
+
+            margin: 0rem 0rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="appointments-container">
+        <h2 style="text-align: center;">المواعيد</h2>
+
+        
+        <form method="get" class="filters">
+            <div>
+                <select name="clinic">
+                    <option value="">جميع العيادات </option>
+                    {% for clinic in clinics %}
+                    <option value="{{ clinic.id }}" {% if request.GET.clinic == clinic.id|stringformat:"s" %}selected{% endif %}>
+                        {{ clinic.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <select name="doctor">
+                    <option value="">جميع الأطباء </option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}" {% if request.GET.doctor == doctor.id|stringformat:"s" %}selected{% endif %}>
+                        {{ doctor.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <input type="date" name="date" value="{{ request.GET.date|default:'' }}">
+            </div>
+            
+            <div>
+                <button type="submit" class="btn-filter"> تصفية</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th> اسم المريض</th>
+                        <th>جوال</th>
+                        <th>عيادة</th>
+                        <th>طبيب</th>
+                        <th>تاريخ</th>
+                        <th>وقت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if appointments %}
+                        {% regroup appointments by appointment_date as appointment_list %}
+                        {% for date in appointment_list %}
+                            <tr class="date-group">
+                                <td colspan="6">{{ date.grouper|date:"l, F j, Y" }}</td>
+                            </tr>
+                            {% for appointment in date.list %}
+                            <tr>
+                                <td>{{ appointment.patient_name }}</td>
+                                <td>{{ appointment.patient_phone }}</td>
+                                <td>{{ appointment.clinic.name }}</td>
+                                <td>{{ appointment.doctor.name }}</td>
+                                <td>{{ appointment.appointment_date }}</td>
+                                <td class="time-cell">{{ appointment.formatted_time }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">
+                                لا يوجد مواعيد
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

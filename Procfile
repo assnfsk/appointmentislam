@@ -1,0 +1,1 @@
+web: gunicorn appo_project.wsgi

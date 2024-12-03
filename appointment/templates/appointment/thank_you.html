@@ -1,0 +1,100 @@
+<!-- templates/appointment/thank_you.html -->
+{% block content %}
+{% block extra_css %}
+<style>
+    :root {
+        --apple-gray: #f5f5f7;
+        --apple-blue: #424874;
+        --apple-dark: #1d1d1f;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+        background-color: var(--apple-gray);
+        color: var(--apple-dark);
+        line-height: 1.5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thank-you-container {
+        background: white;
+        border-radius: 18px;
+        padding: 3rem;
+        text-align: center;
+        max-width: 500px;
+        margin: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #4CD964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+    }
+
+    .checkmark svg {
+        width: 40px;
+        height: 40px;
+        fill: white;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--apple-dark);
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: #6e6e73;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background-color: var(--apple-blue);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0077ED;
+        transform: scale(1.01);
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+
+    @media (max-width: 768px) {
+        .thank-you-container {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+<div class="container mt-5 text-center">
+    <h2> شكرا لك</h2>
+    <p>تم تأكيد موعد الحجز</p>
+    <a href="{% url 'appointment:book_appointment' %}" class="btn btn-primary">حجز موعد اخر</a>
+</div>
+{% endblock %}

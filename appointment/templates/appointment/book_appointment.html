@@ -1,0 +1,341 @@
+<!-- templates/appointment/book_appointment.html -->
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    :root {
+        --apple-gray: #f5f5f7;
+        --apple-blue: #424874;
+        --apple-dark: #1d1d1f;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+        background-color: var(--apple-gray);
+        color: var(--apple-dark);
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 680px;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+
+    .booking-container {
+        background: white;
+        border-radius: 18px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: var(--apple-dark);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--apple-dark);
+    }
+
+    select, input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d2d2d7;
+        border-radius: 12px;
+        background-color: white;
+        font-size: 1rem;
+        transition: all 0.2s;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    select {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.41.59L6 5.17 10.59.59 12 2 6 8 0 2z' fill='%23666'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: var(--apple-blue);
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2);
+    }
+
+    .btn-primary {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--apple-blue);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0077ED;
+        transform: scale(1.01);
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+
+    .error-feedback {
+        color: #ff3b30;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Flatpickr customization */
+    .flatpickr-calendar {
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .flatpickr-day {
+        border-radius: 8px;
+    }
+
+    .flatpickr-day.selected {
+        background: var(--apple-blue);
+        border-color: var(--apple-blue);
+    }
+
+    /* Loading state */
+    select:disabled {
+        background-color: #f5f5f7;
+        cursor: not-allowed;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .container {
+            margin: 1rem;
+            padding: 1rem;
+        }
+
+        .booking-container {
+            padding: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2> حجز موعد </h2>
+    <form method="post" id="appointmentForm">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_clinic">Clinic:</label>
+            {{ form.clinic }}
+            {% if form.clinic.errors %}
+            <div class="error-feedback">{{ form.clinic.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_doctor">الطبيب:</label>
+            {{ form.doctor }}
+            {% if form.doctor.errors %}
+            <div class="error-feedback">{{ form.doctor.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_appointment_date">التاريخ:</label>
+            {{ form.appointment_date }}
+            {% if form.appointment_date.errors %}
+            <div class="error-feedback">{{ form.appointment_date.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_appointment_time">الوقت:</label>
+            {{ form.appointment_time }}
+            {% if form.appointment_time.errors %}
+            <div class="error-feedback">{{ form.appointment_time.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_patient_name">الإسم:</label>
+            {{ form.patient_name }}
+            {% if form.patient_name.errors %}
+            <div class="error-feedback">{{ form.patient_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_patient_phone">رقم الجوال يبدا بـ 5:</label>
+            {{ form.patient_phone }}
+            {% if form.patient_phone.errors %}
+            <div class="error-feedback">{{ form.patient_phone.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary"> حجز الموعد</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const clinicSelect = document.getElementById('id_clinic');
+    const doctorSelect = document.getElementById('id_doctor');
+    const dateInput = document.getElementById('id_appointment_date');
+    const timeSelect = document.getElementById('id_appointment_time');
+
+    // Function to convert 24h to 12h format
+    function formatTime12Hour(time24h) {
+        const [hours, minutes] = time24h.split(':');
+        let period = 'AM';
+        let hours12 = parseInt(hours);
+
+        if (hours12 >= 12) {
+            period = 'PM';
+            if (hours12 > 12) {
+                hours12 -= 12;
+            }
+        }
+        if (hours12 === 0) {
+            hours12 = 12;
+        }
+
+        return `${hours12}:${minutes} ${period}`;
+    }
+
+    // Function to fetch doctors
+    async function updateDoctors(clinicId) {
+        if (!clinicId) {
+            doctorSelect.innerHTML = '<option value="">---------</option>';
+            doctorSelect.disabled = true;
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/get-doctors/?clinic_id=${clinicId}`);
+            const doctors = await response.json();
+            
+            doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+            doctors.forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor.id;
+                option.textContent = doctor.name;
+                doctorSelect.appendChild(option);
+            });
+            doctorSelect.disabled = false;
+        } catch (error) {
+            console.error('Error fetching doctors:', error);
+            doctorSelect.innerHTML = '<option value="">Error loading doctors</option>';
+            doctorSelect.disabled = true;
+        }
+    }
+
+    // Function to update available times
+    async function updateAvailableTimes(clinicId, dateStr) {
+        if (!clinicId || !dateStr) {
+            timeSelect.innerHTML = '<option value="">Select time</option>';
+            timeSelect.disabled = true;
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/get-available-slots/?clinic_id=${clinicId}&date=${dateStr}`);
+            const times = await response.json();
+            
+            timeSelect.innerHTML = '<option value="">Select Time</option>';
+            times.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;  // Keep original 24h format as value
+                option.textContent = formatTime12Hour(time);  // Display in 12h format
+                timeSelect.appendChild(option);
+            });
+            timeSelect.disabled = false;
+        } catch (error) {
+            console.error('Error fetching times:', error);
+            timeSelect.innerHTML = '<option value="">Error loading times</option>';
+            timeSelect.disabled = true;
+        }
+    }
+
+    // Function to fetch unavailable days
+    async function getUnavailableDays(clinicId) {
+        try {
+            const response = await fetch(`/api/get-unavailable-days/?clinic_id=${clinicId}`);
+            const data = await response.json();
+            return data.unavailable_days;
+        } catch (error) {
+            console.error('Error:', error);
+            return [];
+        }
+    }
+
+    // Initialize datepicker with unavailable days
+    async function initializeDatepicker(clinicId) {
+        const unavailableDays = await getUnavailableDays(clinicId);
+        
+        flatpickr(dateInput, {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            disable: [
+                function(date) {
+                    let day = date.getDay();
+                    day = day === 0 ? 6 : day - 1;
+                    return unavailableDays.includes(day);
+                }
+            ],
+            onChange: function(selectedDates, dateStr) {
+                updateAvailableTimes(clinicId, dateStr);
+            }
+        });
+    }
+
+    // Event Listeners
+    clinicSelect.addEventListener('change', function() {
+        const clinicId = this.value;
+        
+        // Reset and disable dependent fields
+        doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+        timeSelect.innerHTML = '<option value="">Select Time</option>';
+        dateInput.value = '';
+        
+        if (clinicId) {
+            updateDoctors(clinicId);
+            initializeDatepicker(clinicId);
+        } else {
+            doctorSelect.disabled = true;
+            timeSelect.disabled = true;
+            dateInput.disabled = true;
+        }
+    });
+
+    // Initial state
+    doctorSelect.disabled = !clinicSelect.value;
+    timeSelect.disabled = true;
+});
+</script>
+{% endblock %}
