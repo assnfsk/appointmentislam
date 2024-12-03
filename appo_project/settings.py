@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://appointmentislam-production.up.railway.app/',
+    'https://appointmentislam-production.up.railway.app',
      'https://appointmentislam-production.up.railway.app/appointments/'
 ]
 
